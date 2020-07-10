@@ -868,6 +868,14 @@ const fluidPlayerClass = function () {
         setTimeout(
             function () {
                 document.getElementById(self.videoPlayerId + '_fluid_initial_play').classList.remove('transform-active');
+
+                if (!self.isCurrentlyPlayingVideo(self.domRef.player)
+                    && self.displayOptions.layoutControls.playButtonShowing
+                    && !self.displayOptions.layoutControls.htmlOnPauseBlock.html) {
+                    document.getElementById(self.videoPlayerId + '_fluid_state_button').classList.remove('fluid_initial_pause_button');
+                    document.getElementById(self.videoPlayerId + '_fluid_state_button').classList.add('fluid_initial_play_button');
+                    document.getElementById(self.videoPlayerId + '_fluid_initial_play').style.display = "block";
+                }
             },
             800
         );
@@ -2252,7 +2260,10 @@ const fluidPlayerClass = function () {
         containerDiv.innerHTML = '<div id="' + self.videoPlayerId + '_fluid_initial_play" class="fluid_initial_play" style="background-color:' + backgroundColor + '"><div id="' + self.videoPlayerId + '_fluid_state_button" class="fluid_initial_play_button"></div></div>';
         const initPlayFunction = function () {
             self.playPauseToggle();
-            containerDiv.removeEventListener('click', initPlayFunction);
+            if (!self.displayOptions.layoutControls.playButtonShowing
+                && !self.displayOptions.layoutControls.htmlOnPauseBlock.html) {
+                containerDiv.removeEventListener('click', initPlayFunction);
+            }
         };
         containerDiv.addEventListener('click', initPlayFunction);
 
